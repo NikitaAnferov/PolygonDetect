@@ -13,10 +13,12 @@ namespace PolygonDetectClassLibrary
         static Graphics g;
         static DataGridView dataGridView;
 
+
         public Draw(IntPtr handle, DataGridView DataGridView)
         {
             g = Graphics.FromHwnd(handle);
             dataGridView = DataGridView;
+
         }
 
         public static void DrawingFormLine(Point pointLast, Point pointNew)
@@ -34,6 +36,12 @@ namespace PolygonDetectClassLibrary
         public static void DrawingFormPoint(Point pointNew, int count)
         {
             dataGridView.Rows.Add(count, pointNew.X, pointNew.Y);
+        }
+
+        public static void ClearForm()
+        {
+            g.Clear(Color.White);
+            dataGridView.Rows.Clear();
         }
         
     }

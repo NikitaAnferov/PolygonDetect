@@ -111,6 +111,7 @@ namespace PolygonDetect
             this.buttonLoad.TabIndex = 7;
             this.buttonLoad.Text = "Загрузить";
             this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
             // dataGridView1
             // 
@@ -156,6 +157,7 @@ namespace PolygonDetect
             // 
             // buttonInput
             // 
+            this.buttonInput.Enabled = false;
             this.buttonInput.Location = new System.Drawing.Point(915, 4);
             this.buttonInput.Name = "buttonInput";
             this.buttonInput.Size = new System.Drawing.Size(75, 23);

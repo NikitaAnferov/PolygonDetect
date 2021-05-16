@@ -75,11 +75,6 @@ namespace PolygonDetect
             {
                 case ("Draw"):
                     Logic.Drawing(e.X, e.Y);
-
-
-
-
-
                     break;
                 case ("Test"):
                  /*   g.FillRectangle(Brushes.Green, e.X - 4, e.Y - 4, 7, 7);
@@ -169,12 +164,17 @@ namespace PolygonDetect
         {
             string drawClick = "Draw";
             if (selectorDo == drawClick)
-            { 
+            {
                 selectorDo = "0";
                 Logic.StopDrawing();
+                buttonInput.Enabled = false;
             }
             else
+            {
                 selectorDo = drawClick;
+                Logic.ClearDate();
+                buttonInput.Enabled = true;
+            }
         }
 
 
@@ -188,6 +188,7 @@ namespace PolygonDetect
             {
                 Logic.StopDrawing();
                 selectorDo = testClick;
+                buttonInput.Enabled = false;
             }
                 
         }
@@ -200,47 +201,76 @@ namespace PolygonDetect
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-           /* Size[] arrayS = arrayPF.ToArray();
-            XmlTextWriter textWritter = new XmlTextWriter("test.xml", Encoding.UTF8);
-            textWritter.WriteStartDocument();
-            textWritter.WriteStartElement("data");
-            textWritter.WriteEndElement();
-            textWritter.Close();
-
-            XmlDocument document = new XmlDocument();
-
-            document.Load("test.xml");
-
-            
-
-            for (int i = 0; i < arrayS.Length; i++)
+            if (selectorDo == "Draw")
             {
-                XmlNode element = document.CreateElement("point");
-                document.DocumentElement.AppendChild(element); // указываем родителя
-                XmlAttribute attribute = document.CreateAttribute("number"); // создаём атрибут
-                attribute.Value = Convert.ToString(i + 1); // устанавливаем значение атрибута
-                element.Attributes.Append(attribute); // добавляем атрибут
-
-                XmlNode subElement1 = document.CreateElement("X"); // даём имя
-                subElement1.InnerText = Convert.ToString(arrayS[i].Width); // и значение
-                element.AppendChild(subElement1); // и указываем кому принадлежит
-
-                XmlNode subElement2 = document.CreateElement("Y"); // даём имя
-                subElement2.InnerText = Convert.ToString(arrayS[i].Height); // и значение
-                element.AppendChild(subElement2); // и указываем кому принадлежит
-
-
+                Logic.StopDrawing();
+                buttonInput.Enabled = false;
             }
-            document.Save("test.xml");
+            SaveFileDialog saveFileDialog = new SaveFileDialog(); // открытие окна для праметров сохранения файла
+            saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
+            saveFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                Logic.Save(saveFileDialog.FileName);
+
+            /* Size[] arrayS = arrayPF.ToArray();
+             XmlTextWriter textWritter = new XmlTextWriter("test.xml", Encoding.UTF8);
+             textWritter.WriteStartDocument();
+             textWritter.WriteStartElement("data");
+             textWritter.WriteEndElement();
+             textWritter.Close();
+
+             XmlDocument document = new XmlDocument();
+
+             document.Load("test.xml");
 
 
 
-            */
+             for (int i = 0; i < arrayS.Length; i++)
+             {
+                 XmlNode element = document.CreateElement("point");
+                 document.DocumentElement.AppendChild(element); // указываем родителя
+                 XmlAttribute attribute = document.CreateAttribute("number"); // создаём атрибут
+                 attribute.Value = Convert.ToString(i + 1); // устанавливаем значение атрибута
+                 element.Attributes.Append(attribute); // добавляем атрибут
+
+                 XmlNode subElement1 = document.CreateElement("X"); // даём имя
+                 subElement1.InnerText = Convert.ToString(arrayS[i].Width); // и значение
+                 element.AppendChild(subElement1); // и указываем кому принадлежит
+
+                 XmlNode subElement2 = document.CreateElement("Y"); // даём имя
+                 subElement2.InnerText = Convert.ToString(arrayS[i].Height); // и значение
+                 element.AppendChild(subElement2); // и указываем кому принадлежит
+
+
+             }
+             document.Save("test.xml");
+
+
+
+             */
         }
 
         private void buttonInput_Click(object sender, EventArgs e)
         {
-            Logic.Drawing(Convert.ToInt32(textBoxX.Text), Convert.ToInt32(textBoxY.Text));
+            int X = Convert.ToInt32(textBoxX.Text);
+            int Y = Convert.ToInt32(textBoxY.Text);
+
+            Logic.Drawing(X, Y);
+        }
+
+        private void buttonLoad_Click(object sender, EventArgs e)
+        {
+            if (selectorDo == "Draw")
+            {
+                Logic.StopDrawing();
+                buttonInput.Enabled = false;
+            }
+
+            OpenFileDialog openFileDialog = new OpenFileDialog(); // открытие окна для праметров сохранения файла
+            openFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
+            openFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                Logic.Open(openFileDialog.FileName);
         }
 
 
