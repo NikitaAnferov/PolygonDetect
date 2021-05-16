@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PolygonDetectClassLibrary\PolygonDetectClassLibrary.csproj">
+      <Project>{20c354b9-4f0b-4fd3-80f6-9433edcfef77}</Project>
+      <Name>PolygonDetectClassLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

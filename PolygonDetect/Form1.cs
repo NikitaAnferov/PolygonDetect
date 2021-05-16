@@ -9,19 +9,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using PolygonDetectClassLibrary;
 
 namespace PolygonDetect
 {
     public partial class Form1 : Form
     {
         String selectorDo = "0";
-        List<Size> arrayPF = new List<Size>();
-        Graphics g;
+        Logic l;
+        Draw d;
+ //       List<Size> arrayPF = new List<Size>();
+
 
         public Form1()
         {
             InitializeComponent();
-            g = Graphics.FromHwnd(pictureBox1.Handle);
+            l = new Logic(); // Инициализируем объект отвечающий за логику программы
+            d = new Draw(pictureBox1.Handle, dataGridView1); // Инициализируем объект отвечающий за отрисовку данных на форме
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
@@ -34,7 +38,7 @@ namespace PolygonDetect
 
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+    /*    private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Pen blackPen = new Pen(Color.Black, 3);
 
@@ -58,7 +62,7 @@ namespace PolygonDetect
 
             // Draw polygon curve to screen.
             e.Graphics.DrawPolygon(blackPen, curvePoints);
-        }
+        }*/
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -70,49 +74,15 @@ namespace PolygonDetect
             switch (selectorDo)
             {
                 case ("Draw"):
-
-                    Point pointNew = new Point(e.X, e.Y);
-                    Size a = new Size(0, 0);
-                    if (arrayPF.Count != 0)
-                    {
-                        a = arrayPF.Last();
-
-                        if (Math.Abs(arrayPF.ElementAt(0).Width - e.X) <= 10 && Math.Abs(arrayPF.ElementAt(0).Height - e.Y) <= 10)
-                        {
-                           DialogResult result = MessageBox.Show(
-                                "Закончить рисование фигуры?",
-                                "Сообщение",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly);
-
-                            if (result == DialogResult.Yes)
-                            {
-                                pointNew.X = arrayPF.ElementAt(0).Width;
-                                pointNew.Y = arrayPF.ElementAt(0).Height; 
-                            }
-                        }
-                    }
-
-                    arrayPF.Add(new Size(pointNew));
+                    Logic.Drawing(e.X, e.Y);
 
 
 
-                    if (arrayPF.Count != 1)
-                    {
-                        g.DrawLine(new Pen(Brushes.Black, 2), new Point(a), new Point(arrayPF.Last()));
-                        g.FillRectangle(Brushes.Red, a.Width - 4, a.Height - 4, 7, 7);
-                    }
-                    
-                    g.FillRectangle(Brushes.Red, arrayPF.Last().Width - 4, arrayPF.Last().Height - 4, 7, 7);
 
-                    dataGridView1.Rows.Add(arrayPF.Count, arrayPF.Last().Width, arrayPF.Last().Height);
 
-                    
                     break;
                 case ("Test"):
-                    g.FillRectangle(Brushes.Green, e.X - 4, e.Y - 4, 7, 7);
+                 /*   g.FillRectangle(Brushes.Green, e.X - 4, e.Y - 4, 7, 7);
                     g.DrawLine(new Pen(Brushes.Blue, 2), new Point(e.X, e.Y), new Point(e.X+1000, e.Y));
                     Size[] arrayS = arrayPF.ToArray();
 
@@ -145,9 +115,9 @@ namespace PolygonDetect
                         Point V32 = new Point(p1Dot2.X - p2Dot1.X, p1Dot2.Y - p2Dot1.Y);
 
                         Point V13 = new Point(p2Dot1.X - p1Dot1.X, p2Dot1.Y - p1Dot1.Y);
-                        Point V14 = new Point(p2Dot2.X - p1Dot1.X, p2Dot2.Y - p1Dot1.Y);
+                        Point V14 = new Point(p2Dot2.X - p1Dot1.X, p2Dot2.Y - p1Dot1.Y);*/
 
-                        /*  int a1 = p1Dot2.Y - p1Dot1.Y;
+                        /*  int a1 = p1Dot2.Y - p1Dot1.Y;---------------------------
                           int b1 = p1Dot1.X - p1Dot2.X;
                           int c1 = -p1Dot1.X * p1Dot2.Y + p1Dot1.Y * p1Dot2.X;
 
@@ -160,7 +130,7 @@ namespace PolygonDetect
                           pCross.X = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
                           pCross.Y = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);*/
 
-                        long v1 = V34.X * V31.Y - V34.Y * V31.X;
+                    /*    long v1 = V34.X * V31.Y - V34.Y * V31.X;
 
                         long v2 = V34.X * V32.Y - V34.Y * V32.X;
 
@@ -176,7 +146,7 @@ namespace PolygonDetect
 
                     if(q %2  == 1)
                         g.FillRectangle(Brushes.Black, e.X - 6, e.Y - 6, 11, 11);
-                    int s = 0;
+                    int s = 0;*/
                     //вызов алгоритма для получения рещультата
                     /*
                     if (true)
@@ -199,7 +169,10 @@ namespace PolygonDetect
         {
             string drawClick = "Draw";
             if (selectorDo == drawClick)
+            { 
                 selectorDo = "0";
+                Logic.StopDrawing();
+            }
             else
                 selectorDo = drawClick;
         }
@@ -212,18 +185,22 @@ namespace PolygonDetect
             if (selectorDo == testClick)
                 selectorDo = "0";
             else
+            {
+                Logic.StopDrawing();
                 selectorDo = testClick;
+            }
+                
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            textBox1.Text = e.X.ToString();
-            textBox2.Text = e.Y.ToString();
+            textBoxX.Text = e.X.ToString();
+            textBoxY.Text = e.Y.ToString();
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            Size[] arrayS = arrayPF.ToArray();
+           /* Size[] arrayS = arrayPF.ToArray();
             XmlTextWriter textWritter = new XmlTextWriter("test.xml", Encoding.UTF8);
             textWritter.WriteStartDocument();
             textWritter.WriteStartElement("data");
@@ -258,7 +235,12 @@ namespace PolygonDetect
 
 
 
+            */
+        }
 
+        private void buttonInput_Click(object sender, EventArgs e)
+        {
+            Logic.Drawing(Convert.ToInt32(textBoxX.Text), Convert.ToInt32(textBoxY.Text));
         }
 
 
