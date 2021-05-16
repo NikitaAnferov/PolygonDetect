@@ -8,5 +8,6 @@ namespace PolygonDetectClassLibrary
 {
     public class Class1
     {
+
     }
 }

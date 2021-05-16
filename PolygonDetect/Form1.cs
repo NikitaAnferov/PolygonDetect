@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace PolygonDetect
 {
@@ -70,20 +71,112 @@ namespace PolygonDetect
             {
                 case ("Draw"):
 
+                    Point pointNew = new Point(e.X, e.Y);
                     Size a = new Size(0, 0);
                     if (arrayPF.Count != 0)
+                    {
                         a = arrayPF.Last();
 
-                    arrayPF.Add(new Size(e.X, e.Y));
+                        if (Math.Abs(arrayPF.ElementAt(0).Width - e.X) <= 10 && Math.Abs(arrayPF.ElementAt(0).Height - e.Y) <= 10)
+                        {
+                           DialogResult result = MessageBox.Show(
+                                "Закончить рисование фигуры?",
+                                "Сообщение",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
 
-                    
+                            if (result == DialogResult.Yes)
+                            {
+                                pointNew.X = arrayPF.ElementAt(0).Width;
+                                pointNew.Y = arrayPF.ElementAt(0).Height; 
+                            }
+                        }
+                    }
+
+                    arrayPF.Add(new Size(pointNew));
+
+
 
                     if (arrayPF.Count != 1)
+                    {
                         g.DrawLine(new Pen(Brushes.Black, 2), new Point(a), new Point(arrayPF.Last()));
+                        g.FillRectangle(Brushes.Red, a.Width - 4, a.Height - 4, 7, 7);
+                    }
+                    
                     g.FillRectangle(Brushes.Red, arrayPF.Last().Width - 4, arrayPF.Last().Height - 4, 7, 7);
-                    g.FillRectangle(Brushes.Red, a.Width - 4, a.Height - 4, 7, 7);
+
+                    dataGridView1.Rows.Add(arrayPF.Count, arrayPF.Last().Width, arrayPF.Last().Height);
+
+                    
                     break;
                 case ("Test"):
+                    g.FillRectangle(Brushes.Green, e.X - 4, e.Y - 4, 7, 7);
+                    g.DrawLine(new Pen(Brushes.Blue, 2), new Point(e.X, e.Y), new Point(e.X+1000, e.Y));
+                    Size[] arrayS = arrayPF.ToArray();
+
+                    Point p2Dot1;
+                    Point p2Dot2;
+                    int q = 0;
+
+                    for (int i = 0; i < arrayS.Length; i++)
+                    {
+                        if (i == arrayS.Length - 1)
+                        {
+                             p2Dot1 = new Point(arrayS[i].Width, arrayS[i].Height);
+                             p2Dot2 = new Point(arrayS[0].Width, arrayS[0].Height);
+                        }
+                        else 
+                        {
+                             p2Dot1 = new Point(arrayS[i].Width, arrayS[i].Height);
+                             p2Dot2 = new Point(arrayS[i + 1].Width, arrayS[i + 1].Height);
+                        }
+
+
+                        Point p1Dot1 = new Point (e.X, e.Y);
+                        Point p1Dot2 = new Point(e.X + 1000, e.Y);
+
+
+                        Point V12 = new Point(p1Dot2.X - p1Dot1.X, p1Dot2.Y - p1Dot1.Y);
+                        Point V34 = new Point(p2Dot2.X - p2Dot1.X, p2Dot2.Y - p2Dot1.Y);
+
+                        Point V31 = new Point(p1Dot1.X - p2Dot1.X, p1Dot1.Y - p2Dot1.Y);
+                        Point V32 = new Point(p1Dot2.X - p2Dot1.X, p1Dot2.Y - p2Dot1.Y);
+
+                        Point V13 = new Point(p2Dot1.X - p1Dot1.X, p2Dot1.Y - p1Dot1.Y);
+                        Point V14 = new Point(p2Dot2.X - p1Dot1.X, p2Dot2.Y - p1Dot1.Y);
+
+                        /*  int a1 = p1Dot2.Y - p1Dot1.Y;
+                          int b1 = p1Dot1.X - p1Dot2.X;
+                          int c1 = -p1Dot1.X * p1Dot2.Y + p1Dot1.Y * p1Dot2.X;
+
+                          int a2 = p2Dot2.Y - p2Dot1.Y;
+                          int b2 = p2Dot1.X - p2Dot2.X;
+                          int c2 = -p2Dot1.X * p2Dot2.Y + p2Dot1.Y * p2Dot2.X;
+
+                          Point pCross = new Point();
+
+                          pCross.X = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
+                          pCross.Y = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);*/
+
+                        long v1 = V34.X * V31.Y - V34.Y * V31.X;
+
+                        long v2 = V34.X * V32.Y - V34.Y * V32.X;
+
+                        long v3 = V12.X * V13.Y - V12.Y * V13.X;
+
+                        long v4 = V12.X * V14.Y - V12.Y * V14.X;
+
+                         if(v1 * v2 < 0 && v3 * v4 < 0)
+                            q++;
+
+                        
+                    }
+
+                    if(q %2  == 1)
+                        g.FillRectangle(Brushes.Black, e.X - 6, e.Y - 6, 11, 11);
+                    int s = 0;
                     //вызов алгоритма для получения рещультата
                     /*
                     if (true)
@@ -120,6 +213,52 @@ namespace PolygonDetect
                 selectorDo = "0";
             else
                 selectorDo = testClick;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            textBox1.Text = e.X.ToString();
+            textBox2.Text = e.Y.ToString();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            Size[] arrayS = arrayPF.ToArray();
+            XmlTextWriter textWritter = new XmlTextWriter("test.xml", Encoding.UTF8);
+            textWritter.WriteStartDocument();
+            textWritter.WriteStartElement("data");
+            textWritter.WriteEndElement();
+            textWritter.Close();
+
+            XmlDocument document = new XmlDocument();
+
+            document.Load("test.xml");
+
+            
+
+            for (int i = 0; i < arrayS.Length; i++)
+            {
+                XmlNode element = document.CreateElement("point");
+                document.DocumentElement.AppendChild(element); // указываем родителя
+                XmlAttribute attribute = document.CreateAttribute("number"); // создаём атрибут
+                attribute.Value = Convert.ToString(i + 1); // устанавливаем значение атрибута
+                element.Attributes.Append(attribute); // добавляем атрибут
+
+                XmlNode subElement1 = document.CreateElement("X"); // даём имя
+                subElement1.InnerText = Convert.ToString(arrayS[i].Width); // и значение
+                element.AppendChild(subElement1); // и указываем кому принадлежит
+
+                XmlNode subElement2 = document.CreateElement("Y"); // даём имя
+                subElement2.InnerText = Convert.ToString(arrayS[i].Height); // и значение
+                element.AppendChild(subElement2); // и указываем кому принадлежит
+
+
+            }
+            document.Save("test.xml");
+
+
+
+
         }
 
 
