@@ -69,7 +69,126 @@ namespace PolygonDetectClassLibrary
 
         }
 
-        static bool EndDrawingQuestion()
+        public static void Calculate(int X, int Y)
+        {
+            
+
+
+            Point[] arrayPoints = points.ToArray();
+
+            Point point = new Point(X, Y);
+            
+
+
+            Point pointCheck1 = new Point(X, Y);
+            Point pointCheck2 = new Point(X + 1000, Y);
+
+           // Draw.DrawingFormLine2(pointCheck1, pointCheck2);
+
+            Point pointLine1;
+            Point pointLine2;
+
+            int previous;
+            int next;
+            int point1;
+            int point2;
+
+            int intersection = 0;
+
+            for (int i = 0; i < arrayPoints.Length; i++)
+            {
+                if (i == arrayPoints.Length - 1)
+                {
+                    point2 = 0;
+                }
+                else
+                {
+                    point2 = i + 1; 
+                }
+
+                point1 = i;
+
+                pointLine1 = arrayPoints[point1];
+                pointLine2 = arrayPoints[point2];
+
+                if (((point.X - pointLine2.X) * (pointLine1.Y - pointLine2.Y)) == ((point.Y - pointLine2.Y) * (pointLine1.X - pointLine2.X)))
+                {
+                    if (((pointLine1.X < pointLine2.X) && (pointLine1.X <= point.X) && (point.X <= pointLine2.X)) || ((pointLine1.X > pointLine2.X) && (pointLine2.X <= point.X) && (point.X <= pointLine1.X)))
+                    {
+                        intersection = -1;
+                        break;
+                    }
+                        
+                }
+
+
+                else if (pointCheck1.Y == pointLine1.Y && pointCheck1.Y == pointLine2.Y)
+                {
+                    if (point1 == 0)
+                        previous = arrayPoints.Length - 1;
+                    else
+                        previous = point1 - 1;
+                    if (point1 == arrayPoints.Length - 1)
+                        next = 0;
+                    else
+                        next = point2 + 1;
+
+                    if (((pointCheck1.Y - arrayPoints[previous].Y) * (pointCheck1.Y - arrayPoints[next].Y)) < 0)
+                        intersection++;
+                    else if (((pointCheck1.Y - arrayPoints[previous].Y) * (pointCheck1.Y - arrayPoints[next].Y)) > 0)
+                        intersection += 2;
+                }
+
+                else if (point.Y == pointLine1.Y)
+                {
+                    if (point1 == 0)
+                        previous = arrayPoints.Length - 1;
+                    else
+                        previous = point1 - 1;
+
+                    if (((point.Y - arrayPoints[previous].Y) * (point.Y - arrayPoints[point2].Y)) < 0)
+                        intersection++;
+                    else if (((point.Y - arrayPoints[previous].Y) * (point.Y - arrayPoints[point2].Y)) > 0)
+                        intersection += 2;
+                }
+                else
+                {
+
+                    Point V12 = new Point(pointCheck2.X - pointCheck1.X, pointCheck2.Y - pointCheck1.Y);
+                    Point V34 = new Point(pointLine2.X - pointLine1.X, pointLine2.Y - pointLine1.Y);
+
+                    Point V31 = new Point(pointCheck1.X - pointLine1.X, pointCheck1.Y - pointLine1.Y);
+                    Point V32 = new Point(pointCheck2.X - pointLine1.X, pointCheck2.Y - pointLine1.Y);
+
+                    Point V13 = new Point(pointLine1.X - pointCheck1.X, pointLine1.Y - pointCheck1.Y);
+                    Point V14 = new Point(pointLine2.X - pointCheck1.X, pointLine2.Y - pointCheck1.Y);
+
+
+                    long v1 = V34.X * V31.Y - V34.Y * V31.X;
+
+                    long v2 = V34.X * V32.Y - V34.Y * V32.X;
+
+                    long v3 = V12.X * V13.Y - V12.Y * V13.X;
+
+                    long v4 = V12.X * V14.Y - V12.Y * V14.X;
+
+                    if (v1 * v2 < 0 && v3 * v4 < 0)
+                        intersection++;
+                }
+            }
+
+
+            if (intersection % 2 == 1)
+                Draw.DrawingFormPoint(point, 1);
+            else if (intersection == -1)
+                Draw.DrawingFormPoint(point, 0);
+            else if (intersection % 2 == 0)
+                Draw.DrawingFormPoint(point, 2);
+
+        }
+      
+
+                static bool EndDrawingQuestion()
         {
             bool endDraving = false;
 
@@ -123,11 +242,11 @@ namespace PolygonDetectClassLibrary
             }
             else
             {
-                Draw.DrawingFormLine(pointNew);
+                Draw.DrawingFormPoint(pointNew, 2);
             }
 
             if (pointNew != pointLast && pointNew != pointOne)
-                Draw.DrawingFormPoint(pointNew, points.Count);
+                Draw.WriteDGV(pointNew, points.Count);
         }
 
         public static void Save(String FileName)
@@ -150,37 +269,6 @@ namespace PolygonDetectClassLibrary
                 ds.Tables["DataList"].Rows.Add(row); //добавление всей этой строки в таблицу ds.
             }
             ds.WriteXml(FileName);
-            /*  XmlTextWriter textWritter = new XmlTextWriter(FileName, Encoding.UTF8);
-              textWritter.WriteStartDocument();
-              textWritter.WriteStartElement("data");
-              textWritter.WriteEndElement();
-              textWritter.Close();
-
-              XmlDocument document = new XmlDocument();
-
-              document.Load(FileName);
-
-
-
-              for (int i = 0; i < arrayPoints.Length; i++)
-              {
-                  XmlNode element = document.CreateElement("point");
-                  document.DocumentElement.AppendChild(element); // указываем родителя
-                  XmlAttribute attribute = document.CreateAttribute("number"); // создаём атрибут
-                  attribute.Value = Convert.ToString(i + 1); // устанавливаем значение атрибута
-                  element.Attributes.Append(attribute); // добавляем атрибут
-
-                  XmlNode subElement1 = document.CreateElement("X"); // даём имя
-                  subElement1.InnerText = Convert.ToString(arrayPoints[i].X); // и значение
-                  element.AppendChild(subElement1); // и указываем кому принадлежит
-
-                  XmlNode subElement2 = document.CreateElement("Y"); // даём имя
-                  subElement2.InnerText = Convert.ToString(arrayPoints[i].Y); // и значение
-                  element.AppendChild(subElement2); // и указываем кому принадлежит
-
-
-              }
-              document.Save(FileName);*/
         }
 
         public static void Open(String FileName)

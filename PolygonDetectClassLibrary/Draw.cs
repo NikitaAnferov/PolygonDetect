@@ -24,16 +24,40 @@ namespace PolygonDetectClassLibrary
         public static void DrawingFormLine(Point pointLast, Point pointNew)
         {
             g.DrawLine(new Pen(Brushes.Black, 2), pointLast, pointNew);
-            g.FillRectangle(Brushes.Red, pointNew.X - 4, pointNew.Y - 4, 7, 7);
-            g.FillRectangle(Brushes.Red, pointLast.X - 4, pointLast.Y - 4, 7, 7);
+            DrawingFormPoint(pointNew, 2);
+            DrawingFormPoint(pointLast, 2);
         }
 
-        public static void DrawingFormLine(Point pointNew)
+        public static void DrawingFormPoint(Point point, int selector)
         {
-            g.FillRectangle(Brushes.Red, pointNew.X - 4, pointNew.Y - 4, 7, 7);
+            switch (selector)
+            {
+                case (0):
+                    g.FillRectangle(Brushes.Yellow, point.X - 4, point.Y - 4, 7, 7);
+                    break;
+                case (1):
+                    g.FillRectangle(Brushes.Green, point.X - 4, point.Y - 4, 7, 7);
+                    break;
+                case (2):
+                    g.FillRectangle(Brushes.Red, point.X - 4, point.Y - 4, 7, 7);
+                    break;
+                default:
+                    break;
+            }
+           
         }
 
-        public static void DrawingFormPoint(Point pointNew, int count)
+        public static void DrawingFormLine2(Point pointNew)
+        {
+            g.FillRectangle(Brushes.Green, pointNew.X - 4, pointNew.Y - 4, 7, 7);
+        }
+
+        public static void DrawingFormLine2(Point pointLast, Point pointNew)
+        {
+            g.DrawLine(new Pen(Brushes.Blue, 1), pointLast, pointNew);
+        }
+
+        public static void WriteDGV(Point pointNew, int count)
         {
             dataGridView.Rows.Add(count, pointNew.X, pointNew.Y);
         }

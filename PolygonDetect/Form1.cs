@@ -77,6 +77,8 @@ namespace PolygonDetect
                     Logic.Drawing(e.X, e.Y);
                     break;
                 case ("Test"):
+
+                    Logic.Calculate(e.X, e.Y);
                  /*   g.FillRectangle(Brushes.Green, e.X - 4, e.Y - 4, 7, 7);
                     g.DrawLine(new Pen(Brushes.Blue, 2), new Point(e.X, e.Y), new Point(e.X+1000, e.Y));
                     Size[] arrayS = arrayPF.ToArray();
@@ -112,18 +114,18 @@ namespace PolygonDetect
                         Point V13 = new Point(p2Dot1.X - p1Dot1.X, p2Dot1.Y - p1Dot1.Y);
                         Point V14 = new Point(p2Dot2.X - p1Dot1.X, p2Dot2.Y - p1Dot1.Y);*/
 
-                        /*  int a1 = p1Dot2.Y - p1Dot1.Y;---------------------------
-                          int b1 = p1Dot1.X - p1Dot2.X;
-                          int c1 = -p1Dot1.X * p1Dot2.Y + p1Dot1.Y * p1Dot2.X;
+                    /*  int a1 = p1Dot2.Y - p1Dot1.Y;---------------------------
+                      int b1 = p1Dot1.X - p1Dot2.X;
+                      int c1 = -p1Dot1.X * p1Dot2.Y + p1Dot1.Y * p1Dot2.X;
 
-                          int a2 = p2Dot2.Y - p2Dot1.Y;
-                          int b2 = p2Dot1.X - p2Dot2.X;
-                          int c2 = -p2Dot1.X * p2Dot2.Y + p2Dot1.Y * p2Dot2.X;
+                      int a2 = p2Dot2.Y - p2Dot1.Y;
+                      int b2 = p2Dot1.X - p2Dot2.X;
+                      int c2 = -p2Dot1.X * p2Dot2.Y + p2Dot1.Y * p2Dot2.X;
 
-                          Point pCross = new Point();
+                      Point pCross = new Point();
 
-                          pCross.X = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
-                          pCross.Y = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);*/
+                      pCross.X = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
+                      pCross.Y = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);*/
 
                     /*    long v1 = V34.X * V31.Y - V34.Y * V31.X;
 
