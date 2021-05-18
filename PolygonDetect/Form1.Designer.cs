@@ -37,30 +37,34 @@ namespace PolygonDetect
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.buttonInput = new System.Windows.Forms.Button();
+            this.buttonClear = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.ColumnNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnY = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonInput = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Location = new System.Drawing.Point(6, 19);
+            this.pictureBox1.Location = new System.Drawing.Point(4, 20);
+            this.pictureBox1.MinimumSize = new System.Drawing.Size(313, 179);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(816, 410);
+            this.pictureBox1.Size = new System.Drawing.Size(824, 421);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
-            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
             // buttonDraw
             // 
+            this.buttonDraw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDraw.Location = new System.Drawing.Point(915, 30);
             this.buttonDraw.Name = "buttonDraw";
             this.buttonDraw.Size = new System.Drawing.Size(75, 23);
@@ -71,6 +75,7 @@ namespace PolygonDetect
             // 
             // buttonTest
             // 
+            this.buttonTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonTest.Location = new System.Drawing.Point(915, 59);
             this.buttonTest.Name = "buttonTest";
             this.buttonTest.Size = new System.Drawing.Size(75, 23);
@@ -81,6 +86,7 @@ namespace PolygonDetect
             // 
             // textBoxX
             // 
+            this.textBoxX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxX.Location = new System.Drawing.Point(841, 4);
             this.textBoxX.Name = "textBoxX";
             this.textBoxX.Size = new System.Drawing.Size(31, 20);
@@ -88,6 +94,7 @@ namespace PolygonDetect
             // 
             // textBoxY
             // 
+            this.textBoxY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxY.Location = new System.Drawing.Point(878, 4);
             this.textBoxY.Name = "textBoxY";
             this.textBoxY.Size = new System.Drawing.Size(31, 20);
@@ -95,6 +102,7 @@ namespace PolygonDetect
             // 
             // buttonSave
             // 
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSave.Location = new System.Drawing.Point(915, 88);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
@@ -105,6 +113,7 @@ namespace PolygonDetect
             // 
             // buttonLoad
             // 
+            this.buttonLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonLoad.Location = new System.Drawing.Point(915, 117);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(75, 23);
@@ -116,6 +125,7 @@ namespace PolygonDetect
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -123,7 +133,7 @@ namespace PolygonDetect
             this.ColumnNumber,
             this.ColumnX,
             this.ColumnY});
-            this.dataGridView1.Location = new System.Drawing.Point(837, 146);
+            this.dataGridView1.Location = new System.Drawing.Point(837, 141);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -131,13 +141,45 @@ namespace PolygonDetect
             this.dataGridView1.Size = new System.Drawing.Size(153, 292);
             this.dataGridView1.TabIndex = 8;
             // 
+            // buttonInput
+            // 
+            this.buttonInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonInput.Enabled = false;
+            this.buttonInput.Location = new System.Drawing.Point(915, 4);
+            this.buttonInput.Name = "buttonInput";
+            this.buttonInput.Size = new System.Drawing.Size(75, 23);
+            this.buttonInput.TabIndex = 9;
+            this.buttonInput.Text = "Внести вручную";
+            this.buttonInput.UseVisualStyleBackColor = true;
+            this.buttonInput.Click += new System.EventHandler(this.buttonInput_Click);
+            // 
+            // buttonClear
+            // 
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClear.Location = new System.Drawing.Point(837, 30);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(75, 23);
+            this.buttonClear.TabIndex = 11;
+            this.buttonClear.Text = "Очистить";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(102, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Панель рисования";
+            // 
             // ColumnNumber
             // 
             this.ColumnNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
             this.ColumnNumber.HeaderText = "№";
-            this.ColumnNumber.MinimumWidth = 50;
+            this.ColumnNumber.MinimumWidth = 40;
             this.ColumnNumber.Name = "ColumnNumber";
-            this.ColumnNumber.Width = 50;
+            this.ColumnNumber.Width = 40;
             // 
             // ColumnX
             // 
@@ -155,33 +197,14 @@ namespace PolygonDetect
             this.ColumnY.Name = "ColumnY";
             this.ColumnY.Width = 50;
             // 
-            // buttonInput
-            // 
-            this.buttonInput.Enabled = false;
-            this.buttonInput.Location = new System.Drawing.Point(915, 4);
-            this.buttonInput.Name = "buttonInput";
-            this.buttonInput.Size = new System.Drawing.Size(75, 23);
-            this.buttonInput.TabIndex = 9;
-            this.buttonInput.Text = "Внести вручную";
-            this.buttonInput.UseVisualStyleBackColor = true;
-            this.buttonInput.Click += new System.EventHandler(this.buttonInput_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.pictureBox1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(828, 434);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Панель рисования";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 445);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonInput);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.buttonLoad);
@@ -190,12 +213,12 @@ namespace PolygonDetect
             this.Controls.Add(this.textBoxX);
             this.Controls.Add(this.buttonTest);
             this.Controls.Add(this.buttonDraw);
+            this.MinimumSize = new System.Drawing.Size(600, 279);
             this.Name = "Form1";
             this.Text = "Определение принадлежности точки многоугольнику с использованием \"Четно - нечетно" +
     "го правила\"";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,11 +234,12 @@ namespace PolygonDetect
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button buttonInput;
+        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnX;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnY;
-        private System.Windows.Forms.Button buttonInput;
-        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

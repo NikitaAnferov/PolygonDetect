@@ -8,27 +8,31 @@ using System.Windows.Forms;
 
 namespace PolygonDetectClassLibrary
 {
-    public class Draw
+    internal class Draw
     {
-        static Graphics g;
-        static DataGridView dataGridView;
+        Graphics g;
+        DataGridView dataGridView;
+        Bitmap bmp;
+        PictureBox pictureBox;
 
-
-        public Draw(IntPtr handle, DataGridView DataGridView)
+        internal Draw(Bitmap Bmp, DataGridView DataGridView, PictureBox PictureBox)
         {
-            g = Graphics.FromHwnd(handle);
+            int s = 0;
+            g = Graphics.FromImage(Bmp);
             dataGridView = DataGridView;
-
+            bmp = Bmp;
+            pictureBox = PictureBox;
         }
 
-        public static void DrawingFormLine(Point pointLast, Point pointNew)
+        internal void DrawingFormLine(Point pointLast, Point pointNew)
         {
             g.DrawLine(new Pen(Brushes.Black, 2), pointLast, pointNew);
             DrawingFormPoint(pointNew, 2);
             DrawingFormPoint(pointLast, 2);
+            pictureBox.Image = bmp;
         }
 
-        public static void DrawingFormPoint(Point point, int selector)
+        internal void DrawingFormPoint(Point point, int selector)
         {
             switch (selector)
             {
@@ -44,28 +48,20 @@ namespace PolygonDetectClassLibrary
                 default:
                     break;
             }
-           
+            pictureBox.Image = bmp;
+
         }
 
-        public static void DrawingFormLine2(Point pointNew)
-        {
-            g.FillRectangle(Brushes.Green, pointNew.X - 4, pointNew.Y - 4, 7, 7);
-        }
-
-        public static void DrawingFormLine2(Point pointLast, Point pointNew)
-        {
-            g.DrawLine(new Pen(Brushes.Blue, 1), pointLast, pointNew);
-        }
-
-        public static void WriteDGV(Point pointNew, int count)
+        internal void WriteDGV(Point pointNew, int count)
         {
             dataGridView.Rows.Add(count, pointNew.X, pointNew.Y);
         }
 
-        public static void ClearForm()
+        internal void ClearForm()
         {
             g.Clear(Color.White);
             dataGridView.Rows.Clear();
+            pictureBox.Image = bmp;
         }
         
     }

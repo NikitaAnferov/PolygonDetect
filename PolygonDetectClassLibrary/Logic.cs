@@ -12,78 +12,41 @@ namespace PolygonDetectClassLibrary
 {
     public class Logic
     {
-        public Logic()
+        Draw d;
+        public Logic(Bitmap Bmp, DataGridView DataGridView, PictureBox PictureBox)
         {
             points = new Points();
             pointNew = new Point();
             pointLast = new Point();
             pointOne = new Point();
+            d = new Draw(Bmp, DataGridView, PictureBox);
         }
 
-        static Points points;
+        Points points;
 
-        static Point pointNew;
-        static Point pointLast;
-        static Point pointOne;
-
-
-        /*    public static Points Points
-            {
-                get
-                {
-                    if (points != null)
-                        return points;
-                    return null; //error 
-                }
-            }*/
-
-
-
-
-        public static void Drawing(int X, int Y)
+        Point pointNew;
+        Point pointLast;
+        Point pointOne;
+        public void Drawing(int X, int Y)
         {
             pointNew = new Point(X, Y);
 
-
             if (!EndDrawingQuestion())
-            {
                 points.Add(pointNew);
-                //   pointLast = points.Last();
-            }
 
             SendDrawing();
 
-            /*
-                        if (points.Count > 1)
-                        {
-                            Draw.DrawingFormLine(pointLast, pointNew);
-                        }
-                        else
-                        {
-                            Draw.DrawingFormLine(pointNew);
-                        }
-
-                        if(pointNew != pointLast && pointNew != pointOne)
-                        Draw.DrawingFormPoint(pointNew, points.Count);
-            */
-
         }
 
-        public static void Calculate(int X, int Y)
+        public void Calculate(int X, int Y)
         {
-            
-
-
             Point[] arrayPoints = points.ToArray();
 
             Point point = new Point(X, Y);
             
 
-
             Point pointCheck1 = new Point(X, Y);
             Point pointCheck2 = new Point(X + 1000, Y);
-
-           // Draw.DrawingFormLine2(pointCheck1, pointCheck2);
 
             Point pointLine1;
             Point pointLine2;
@@ -139,7 +102,7 @@ namespace PolygonDetectClassLibrary
                         intersection += 2;
                 }
 
-                else if (point.Y == pointLine1.Y)
+                else if (point.Y == pointLine1.Y && point.X < pointLine1.X)
                 {
                     if (point1 == 0)
                         previous = arrayPoints.Length - 1;
@@ -179,16 +142,16 @@ namespace PolygonDetectClassLibrary
 
 
             if (intersection % 2 == 1)
-                Draw.DrawingFormPoint(point, 1);
+                d.DrawingFormPoint(point, 1);
             else if (intersection == -1)
-                Draw.DrawingFormPoint(point, 0);
+                d.DrawingFormPoint(point, 0);
             else if (intersection % 2 == 0)
-                Draw.DrawingFormPoint(point, 2);
+                d.DrawingFormPoint(point, 2);
 
         }
       
 
-                static bool EndDrawingQuestion()
+        bool EndDrawingQuestion()
         {
             bool endDraving = false;
 
@@ -219,37 +182,40 @@ namespace PolygonDetectClassLibrary
             return endDraving;
         }
 
-        public static void StopDrawing()
-        {
-            pointLast = points.Last();
-            pointNew = pointOne;
-            SendDrawing();
-        }
-
-        public static void ClearDate()
-        {
-            points.Clear();
-            Draw.ClearForm();
-        }
-
-
-
-        static void SendDrawing()
+        public void StopDrawing()
         {
             if (points.Count > 1)
             {
-                Draw.DrawingFormLine(pointLast, pointNew);
+                pointLast = points.Last();
+                pointNew = pointOne;
+                SendDrawing();
+            }
+        }
+
+        public void ClearDate()
+        {
+            points.Clear();
+            d.ClearForm();
+        }
+
+
+
+        void SendDrawing()
+        {
+            if (points.Count > 1)
+            {
+                d.DrawingFormLine(pointLast, pointNew);
             }
             else
             {
-                Draw.DrawingFormPoint(pointNew, 2);
+                d.DrawingFormPoint(pointNew, 2);
             }
 
             if (pointNew != pointLast && pointNew != pointOne)
-                Draw.WriteDGV(pointNew, points.Count);
+                d.WriteDGV(pointNew, points.Count);
         }
 
-        public static void Save(String FileName)
+        public void Save(String FileName)
         {
             Point[] arrayPoints = points.ToArray();
             DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
@@ -271,7 +237,7 @@ namespace PolygonDetectClassLibrary
             ds.WriteXml(FileName);
         }
 
-        public static void Open(String FileName)
+        public void Open(String FileName)
         {
             Point[] arrayPoints = points.ToArray();
             int X;
