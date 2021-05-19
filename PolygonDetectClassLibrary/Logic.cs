@@ -13,6 +13,7 @@ namespace PolygonDetectClassLibrary
     public class Logic
     {
         Draw d;
+        SaveLoad sl;
         public Logic(Bitmap Bmp, DataGridView DataGridView, PictureBox PictureBox)
         {
             points = new Points();
@@ -20,6 +21,7 @@ namespace PolygonDetectClassLibrary
             pointLast = new Point();
             pointOne = new Point();
             d = new Draw(Bmp, DataGridView, PictureBox);
+            sl = new SaveLoad();
         }
 
         Points points;
@@ -84,7 +86,6 @@ namespace PolygonDetectClassLibrary
                         
                 }
 
-
                 else if (pointCheck1.Y == pointLine1.Y && pointCheck1.Y == pointLine2.Y)
                 {
                     if (point1 == 0)
@@ -142,15 +143,14 @@ namespace PolygonDetectClassLibrary
 
 
             if (intersection % 2 == 1)
-                d.DrawingFormPoint(point, 1);
+                d.DrawingFormPoint(point, "Green");
             else if (intersection == -1)
-                d.DrawingFormPoint(point, 0);
+                d.DrawingFormPoint(point, "Yellow");
             else if (intersection % 2 == 0)
-                d.DrawingFormPoint(point, 2);
+                d.DrawingFormPoint(point, "Red");
 
         }
       
-
         bool EndDrawingQuestion()
         {
             bool endDraving = false;
@@ -167,8 +167,7 @@ namespace PolygonDetectClassLibrary
                          "Сообщение",
                          MessageBoxButtons.YesNo,
                          MessageBoxIcon.Question,
-                         MessageBoxDefaultButton.Button1,
-                         MessageBoxOptions.DefaultDesktopOnly);
+                         MessageBoxDefaultButton.Button1);
 
                     if (result == DialogResult.Yes)
                     {
@@ -192,13 +191,15 @@ namespace PolygonDetectClassLibrary
             }
         }
 
-        public void ClearDate()
+        public void ClearData()
         {
             points.Clear();
+            points = new Points();
+            pointNew = new Point();
+            pointLast = new Point();
+            pointOne = new Point();
             d.ClearForm();
         }
-
-
 
         void SendDrawing()
         {
@@ -208,55 +209,52 @@ namespace PolygonDetectClassLibrary
             }
             else
             {
-                d.DrawingFormPoint(pointNew, 2);
+                d.DrawingFormPoint(pointNew, "Red");
             }
 
             if (pointNew != pointLast && pointNew != pointOne)
                 d.WriteDGV(pointNew, points.Count);
         }
 
+        public SaveFileDialog LoadSaveFileDialog()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog(); // открытие окна для праметров сохранения файла
+            saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
+            saveFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла;
+            return saveFileDialog;
+        }
+
+        public OpenFileDialog LoadOpenFileDialog()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog(); // открытие окна для праметров сохранения файла
+            openFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
+            openFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла;
+            return openFileDialog;
+        }
+
         public void Save(String FileName)
         {
-            Point[] arrayPoints = points.ToArray();
-            DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
-            DataTable dt = new DataTable(); // создаем пока что пустую таблицу данных
-            dt.TableName = "DataList"; // название таблицы
-            dt.Columns.Add("Number"); // название колонок
-            dt.Columns.Add("X");
-            dt.Columns.Add("Y");
-            ds.Tables.Add(dt); //в ds создается таблица, с названием и колонками, созданными выше
-
-            for (int i =0; i< arrayPoints.Length; i++) // пока в dataGridView1 есть строки
-            {
-                DataRow row = ds.Tables["DataList"].NewRow(); // создаем новую строку в таблице, занесенной в ds
-                row["Number"] = (i + 1).ToString();  //в столбец этой строки заносим данные из первого столбца dataGridView1
-                row["X"] = arrayPoints[i].X.ToString(); // то же самое со вторыми столбцами
-                row["Y"] = arrayPoints[i].Y.ToString(); //то же самое с третьими столбцами
-                ds.Tables["DataList"].Rows.Add(row); //добавление всей этой строки в таблицу ds.
-            }
-            ds.WriteXml(FileName);
+            if(sl.Save(FileName, points))
+                MessageBox.Show("Данные о координатах фигуры успешно сохранены",
+                         "Сообщение",
+                         MessageBoxButtons.OK,
+                         MessageBoxIcon.Information,
+                         MessageBoxDefaultButton.Button1);
         }
 
         public void Open(String FileName)
         {
-            Point[] arrayPoints = points.ToArray();
-            int X;
-            int Y;
-            ClearDate();
-            
-            DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
-            ds.ReadXml(FileName); // записываем в него XML-данные из файла
-            
+            int [,] XY = sl.Open(FileName, points);
 
-            foreach (DataRow item in ds.Tables["DataList"].Rows) // пока в dataGridView1 есть строки
+            if(XY != null)
             {
-                 X = Convert.ToInt32(item["X"]);
-                 Y = Convert.ToInt32(item["Y"]);
+                ClearData();
 
-                Drawing(X, Y);     
+                for (int i = 0; i < XY.GetLength(0); i++)
+                    Drawing(XY[i, 0], XY[i, 1]);
             }
-            StopDrawing();
 
+            StopDrawing();
         }
     }
 }

@@ -17,61 +17,76 @@ namespace PolygonDetect
     {
         String selectorDo = "0";
         Logic l;
-        
-        //       List<Size> arrayPF = new List<Size>();
-
+        int pictureHeight;
+        int pictureWidth;
 
         public Form1()
         {
             InitializeComponent();
-            pictureBox1.Width = 1196;
-            pictureBox1.Height = 681;
-            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);//Создаём рисунок
-            //bmp будет храниться в оперативной памяти, не на HDD.
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);//Создаём рисунок bmp будет храниться в оперативной памяти, не на HDD.
             l = new Logic(bmp, dataGridView1, pictureBox1); // Инициализируем объект отвечающий за логику программы
-            
-          
-           // d = new Draw(bmp, dataGridView1, pictureBox1); // Инициализируем объект отвечающий за отрисовку данных на форме
-            pictureBox1.Width = 824;
-            pictureBox1.Height = 421;
+            this.WindowState = System.Windows.Forms.FormWindowState.Normal;
 
             ElementsEnebleTrueFalse(false);
-
-
         }
+
+        private void pictureBox1_SizeChanged(object sender, EventArgs e)
+        {
+            pictureWidth = pictureBox1.Width;
+            pictureHeight = pictureBox1.Height;
+        }
+
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            switch (selectorDo)
+            try
             {
-                case ("Draw"):
-                    l.Drawing(e.X, e.Y);
-                    break;
+                switch (selectorDo)
+                {
+                    case ("Draw"):
+                        l.Drawing(e.X, e.Y);
+                        break;
 
-                case ("Test"):
-                    l.Calculate(e.X, e.Y);
-                    break;
-
-                default:
-                    break;
-
+                    case ("Test"):
+                        l.Calculate(e.X, e.Y);
+                        break;
+                }
+            
             }
-        }
+
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+}
 
         private void buttonDraw_Click(object sender, EventArgs e)
         {
-            string drawClick = "Draw";
-            if (selectorDo == drawClick)
+            try
             {
-                selectorDo = "0";
-                l.StopDrawing();
-                ElementsEnebleTrueFalse(false);
+                string drawClick = "Draw";
+                if (selectorDo == drawClick)
+                {
+                    selectorDo = "0";
+                    l.StopDrawing();
+                    ElementsEnebleTrueFalse(false);
 
+                }
+                else
+                {
+                    selectorDo = drawClick;
+                    l.ClearData();
+                    ElementsEnebleTrueFalse(true);
+                    textBoxX.Focus();
+                }
             }
-            else
+
+            catch (Exception ex)
             {
-                selectorDo = drawClick;
-                l.ClearDate();
-                ElementsEnebleTrueFalse(true);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -79,97 +94,232 @@ namespace PolygonDetect
 
         private void buttonTest_Click(object sender, EventArgs e)
         {
-            string testClick = "Test";
-            if (selectorDo == testClick)
+            try
             {
-                selectorDo = "0";
-                ElementsEnebleTrueFalse(false);
+                string testClick = "Test";
+                if (selectorDo == testClick)
+                {
+                    selectorDo = "0";
+                    ElementsEnebleTrueFalse(false);
+                }
+
+                else
+                {
+                    l.StopDrawing();
+                    selectorDo = testClick;
+                    ElementsEnebleTrueFalse(true);
+                }
             }
-                
-            else
+
+            catch (Exception ex)
             {
-                l.StopDrawing();
-                selectorDo = testClick;
-                ElementsEnebleTrueFalse(true);
+                MessageBox.Show(ex.Message);
             }
-                
+
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (selectorDo == "Draw" || selectorDo == "Test")
+            try
             {
-                textBoxX.Text = e.X.ToString();
-                textBoxY.Text = e.Y.ToString();
+                if (selectorDo == "Draw" || selectorDo == "Test")
+                {
+                    textBoxX.Text = e.X.ToString();
+                    textBoxY.Text = e.Y.ToString();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (selectorDo == "Draw")
-                l.StopDrawing();
+            try
+            {
+                if (selectorDo == "Draw")
+                    l.StopDrawing();
 
-            selectorDo = "0";
-            ElementsEnebleTrueFalse(false);
-            SaveFileDialog saveFileDialog = new SaveFileDialog(); // открытие окна для праметров сохранения файла
-            saveFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
-            saveFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                l.Save(saveFileDialog.FileName);
+                selectorDo = "0";
+                ElementsEnebleTrueFalse(false);
+
+                SaveFileDialog saveFileDialog = l.LoadSaveFileDialog();
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    l.Save(saveFileDialog.FileName);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void buttonInput_Click(object sender, EventArgs e)
         {
-            int X = Convert.ToInt32(textBoxX.Text);
-            int Y = Convert.ToInt32(textBoxY.Text);
-
-            switch (selectorDo)
+            try
             {
-                case ("Draw"):
-                    l.Drawing(X, Y);
-                    break;
+                if (textBoxX.Text != "" && textBoxY.Text != "")
+                {
+                    int X = Convert.ToInt32(textBoxX.Text);
+                    int Y = Convert.ToInt32(textBoxY.Text);
 
-                case ("Test"):
-                    l.Calculate(X, Y);
-                    break;
+                    switch (selectorDo)
+                    {
+                        case ("Draw"):
+                            l.Drawing(X, Y);
+                            break;
 
-                default:
-                    break;
+                        case ("Test"):
+                            l.Calculate(X, Y);
+                            break;
+                    }
 
+                    textBoxX.Clear();
+                    textBoxY.Clear();
+                    textBoxX.Focus();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void buttonInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try
+            {
+                if (e.KeyChar == '\r')
+                {
+                    e.Handled = true;
+                    buttonInput_Click(sender, e);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
-            if (selectorDo == "Draw")
-                l.StopDrawing();
+            try
+            {
+                if (selectorDo == "Draw")
+                    l.StopDrawing();
 
-            selectorDo = "0";
-            ElementsEnebleTrueFalse(false);
+                selectorDo = "0";
+                ElementsEnebleTrueFalse(false);
 
-            OpenFileDialog openFileDialog = new OpenFileDialog(); // открытие окна для праметров сохранения файла
-            openFileDialog.Filter = "XML files(.xml)|*.xml|all Files(*.*)|*.*"; // задаем тип сохраняемого файла
-            openFileDialog.FileName = "Шаблон"; // задаем название сохраняемого файла
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                l.Open(openFileDialog.FileName);
+                OpenFileDialog openFileDialog = l.LoadOpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    l.Open(openFileDialog.FileName);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            l.ClearDate();
-            selectorDo = "0";
-            ElementsEnebleTrueFalse(false);
+            try
+            {
+                l.ClearData();
+                selectorDo = "0";
+                ElementsEnebleTrueFalse(false);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void textBoxX_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try { ValidatorValue(e); }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
+        }
+
+
+        private void textBoxY_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try { ValidatorValue(e); }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void textBoxX_KeyUp(object sender, KeyEventArgs e)
+        {
+            try { VlidatorValueMax(textBoxX, pictureWidth); }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void textBoxY_KeyUp(object sender, KeyEventArgs e)
+        {
+            try { VlidatorValueMax(textBoxY, pictureHeight); }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ValidatorValue(KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar))
+            {
+                if (e.KeyChar != (char)Keys.Back)
+                {
+                    e.Handled = true;
+                }
+
+                if (e.KeyChar == '\r')
+                {
+                    e.Handled = true;
+                    SelectNextControl(ActiveControl, true, true, true, true);
+                }
+            }
+        }
+        private void VlidatorValueMax(TextBox textBox, int max)
+        {
+            if (textBox.Text != "")
+                if (Convert.ToInt32(textBox.Text) > max)
+                    textBox.Text = max.ToString();
+
+            textBox.SelectionStart = textBox.Text.Length;
         }
 
         private void ElementsEnebleTrueFalse(bool enable)
         {
             if (enable)
             {
-                textBoxX.Text = null;//подсказка
-                textBoxY.Text = null;//подсказка
-                
+                textBoxX.Text = null;
+                textBoxY.Text = null;
             }
-            else 
+            else
             {
                 textBoxX.Text = "X";//подсказка
                 textBoxY.Text = "Y";//подсказка
@@ -181,5 +331,4 @@ namespace PolygonDetect
 
         }
     }
-
 }

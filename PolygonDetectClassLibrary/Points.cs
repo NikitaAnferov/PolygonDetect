@@ -9,9 +9,5 @@ namespace PolygonDetectClassLibrary
 {
     class Points : List <Point>
     {
-     /*   public void AddC(int X, int Y)
-        {
-            this.Add(new Point(X, Y));
-        }*/
     }
 }

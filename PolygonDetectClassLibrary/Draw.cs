@@ -10,44 +10,44 @@ namespace PolygonDetectClassLibrary
 {
     internal class Draw
     {
+        const int SIZE_POINT = 7; // настройка размера точки
+        const int SIZE_LINE = 2;  // настройка размера линии
+
         Graphics g;
         DataGridView dataGridView;
         Bitmap bmp;
         PictureBox pictureBox;
+        Dictionary <String, Brush> brushes;
 
-        internal Draw(Bitmap Bmp, DataGridView DataGridView, PictureBox PictureBox)
+        internal Draw(Bitmap bmp, DataGridView dataGridView, PictureBox pictureBox)
         {
-            int s = 0;
-            g = Graphics.FromImage(Bmp);
-            dataGridView = DataGridView;
-            bmp = Bmp;
-            pictureBox = PictureBox;
+            g = Graphics.FromImage(bmp);
+            this.dataGridView = dataGridView;
+            this.bmp = bmp;
+            this.pictureBox = pictureBox;
+
+            brushes = new Dictionary<String, Brush>(3);
+            brushes.Add("Yellow",Brushes.Yellow);
+            brushes.Add("Green",Brushes.Green);
+            brushes.Add("Red",Brushes.Red);
         }
 
         internal void DrawingFormLine(Point pointLast, Point pointNew)
         {
-            g.DrawLine(new Pen(Brushes.Black, 2), pointLast, pointNew);
-            DrawingFormPoint(pointNew, 2);
-            DrawingFormPoint(pointLast, 2);
+            int sizeLine = SIZE_LINE;
+
+            g.DrawLine(new Pen(Brushes.Black, sizeLine), pointLast, pointNew);
+            DrawingFormPoint(pointNew, "Red");
+            DrawingFormPoint(pointLast, "Red");
             pictureBox.Image = bmp;
         }
 
-        internal void DrawingFormPoint(Point point, int selector)
+        internal void DrawingFormPoint(Point point, string color)
         {
-            switch (selector)
-            {
-                case (0):
-                    g.FillRectangle(Brushes.Yellow, point.X - 4, point.Y - 4, 7, 7);
-                    break;
-                case (1):
-                    g.FillRectangle(Brushes.Green, point.X - 4, point.Y - 4, 7, 7);
-                    break;
-                case (2):
-                    g.FillRectangle(Brushes.Red, point.X - 4, point.Y - 4, 7, 7);
-                    break;
-                default:
-                    break;
-            }
+            int sizePoint = SIZE_POINT + 1 - SIZE_POINT % 2;
+            int coef = sizePoint / 2 + 1;
+
+            g.FillRectangle(brushes[color], point.X - coef, point.Y - coef, sizePoint, sizePoint);
             pictureBox.Image = bmp;
 
         }
@@ -63,6 +63,6 @@ namespace PolygonDetectClassLibrary
             dataGridView.Rows.Clear();
             pictureBox.Image = bmp;
         }
-        
+
     }
 }
