@@ -126,6 +126,7 @@ namespace PolygonDetect
                 {
                     textBoxX.Text = e.X.ToString();
                     textBoxY.Text = e.Y.ToString();
+                    textBoxX.SelectionStart = textBoxX.Text.Length;
                 }
             }
 
